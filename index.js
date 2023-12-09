@@ -5,6 +5,8 @@ import express from 'express';
 import cors from 'cors';
 import { tempRouter } from './src/routes/temp.route.js';
 import { userRouter } from './src/routes/user.route.js';
+import { storeRouter } from './src/routes/store.route.js';
+import { reviewRouter } from './src/routes/review.route.js';
 import { response } from './config/response.js';
 
 import { specs } from './config/swagger.config.js';
@@ -26,6 +28,8 @@ app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(specs));
 // router setting
 app.use('/temp', tempRouter);
 app.use('/user', userRouter);
+app.use('/store', storeRouter);
+app.use('/review', reviewRouter);
 
 // error handling
 app.use((err, req, res, next) => {

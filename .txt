@@ -1,0 +1,149 @@
+create table User
+(
+    id         int          not null
+        primary key,
+    name       varchar(10)  not null,
+    gender     int          not null comment '0:남 1: 여 선택없음 :2',
+    birth      date         not null,
+    address    varchar(100) not null,
+    email      varchar(100) not null,
+    created_at datetime     not null,
+    deleted_at datetime     not null,
+    updated_at datetime     not null
+);
+
+create table SocialLogin
+(
+    id               int          not null,
+    user_id          int          not null,
+    provider_nm      varchar(100) not null,
+    provider_user_id varchar(150) not null,
+    primary key (id, user_id),
+    constraint FK_User_TO_SocialLogin_1
+        foreign key (user_id) references User (id)
+);
+
+create table inquiry
+(
+    id            int           not null
+        primary key,
+    title         varchar(100)  not null,
+    content       text          not null,
+    inquiry_img   varchar(2084) null,
+    answer        text          null,
+    answer_status tinyint(1)    not null,
+    user_id       int           not null,
+    created_at    datetime      not null,
+    deleted_at    datetime      not null
+);
+
+create table mission
+(
+    id         int          not null
+        primary key,
+    name       varchar(300) not null,
+    content    varchar(300) not null,
+    point      bigint       not null,
+    owner_id   varchar(30)  not null,
+    status     int          not null comment '0:미션 전 1:진행 중 2: 성공',
+    created_at datetime     not null,
+    updated_at datetime     not null,
+    store_id   int          not null
+);
+
+create table notification
+(
+    id                int          not null
+        primary key,
+    notification_type varchar(100) not null comment '새로운 이벤트 수신, 리뷰 답변, 문의 내역 답변',
+    content           text         not null,
+    is_read           tinyint(1)   not null comment 'default : 미읽음',
+    setting           tinyint(1)   not null comment 'default : ON',
+    created_at        datetime     null,
+    user_id           int          not null
+);
+
+create table phonenum
+(
+    id          int          not null
+        primary key,
+    phonenumber varchar(30)  null,
+    code        varchar(100) not null,
+    status      varchar(30)  not null,
+    time        timestamp    not null,
+    user_id     int          not null
+);
+
+create table point
+(
+    id         int      not null,
+    user_id    int      not null,
+    mission_id int      not null,
+    points     bigint   not null,
+    created_at datetime not null,
+    deleted_at datetime not null,
+    updated_at datetime not null,
+    primary key (id, user_id, mission_id),
+    constraint FK_User_TO_point_1
+        foreign key (user_id) references User (id),
+    constraint FK_mission_TO_point_1
+        foreign key (mission_id) references mission (id)
+);
+
+create table preference
+(
+    id              int         not null
+        primary key,
+    preference_item varchar(15) null,
+    user_id         int         not null
+);
+
+create table region
+(
+    id        int auto_increment
+        primary key,
+    latitude  decimal(10, 8) not null,
+    longitude decimal(11, 8) not null
+);
+
+create table review
+(
+    id          int           not null
+        primary key,
+    rating_star int           not null comment '1~5점',
+    content     text          not null,
+    review_img  varchar(2084) null comment '3개까지',
+    store_id    int           not null,
+    mission_id  int           not null,
+    user_id     int           not null,
+    created_at  datetime      not null,
+    updated_at  datetime      not null,
+    deleted_at  datetime      not null
+);
+
+create table store
+(
+    id         int         not null
+        primary key,
+    region_id  int         not null,
+    name       varchar(50) not null,
+    category   varchar(30) not null,
+    created_at datetime    not null,
+    updated_at datetime    not null,
+    constraint FK_Store_TO_Region
+        foreign key (region_id) references region (id)
+            on delete cascade
+);
+
+create table user_mission
+(
+    id         int not null,
+    user_id    int not null,
+    mission_id int not null,
+    primary key (id, user_id, mission_id),
+    constraint FK_User_TO_user_mission_1
+        foreign key (user_id) references User (id),
+    constraint FK_mission_TO_user_mission_1
+        foreign key (mission_id) references mission (id)
+);
+

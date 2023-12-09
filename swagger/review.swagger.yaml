@@ -1,0 +1,111 @@
+openapi: 3.0.0
+info:
+    title: Review API
+    version: 1.0.0
+    description: API for managing reviews
+
+paths:
+    /store/{storeId}/reviews:
+        post:
+            summary: Add a new review
+            tags:
+                - Review
+            parameters:
+                - in: path
+                  name: storeId
+                  required: true
+                  description: ID of the store to add the review to
+                  schema:
+                      type: integer
+                - in: body
+                  name: review
+                  required: true
+                  description: Review details
+                  content:
+                      application/json:
+                          schema:
+                              type: object
+                              properties:
+                                  rating_star:
+                                      type: integer
+                                      description: Rating of the review (1-5 stars)
+                                  content:
+                                      type: string
+                                      description: Content of the review
+                                  review_img:
+                                      type: string
+                                      description: Image URL for the review
+                                  mission_id:
+                                      type: integer
+                                      description: ID of the associated mission
+                                  user_id:
+                                      type: integer
+                                      description: ID of the user submitting the review
+                          required:
+                              - rating_star
+                              - content
+                              - user_id
+            responses:
+                '200':
+                    description: Review added successfully
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: integer
+                                        example: 200
+                                    isSuccess:
+                                        type: boolean
+                                        example: true
+                                    code:
+                                        type: integer
+                                        example: 2000
+                                    message:
+                                        type: string
+                                        example: 'Review added successfully'
+                                    data:
+                                        type: object
+                                        properties:
+                                            reviewId:
+                                                type: integer
+                                                example: 123
+                '400':
+                    description: Bad request
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: integer
+                                        example: 400
+                                    isSuccess:
+                                        type: boolean
+                                        example: false
+                                    code:
+                                        type: integer
+                                        example: COMMON001
+                                    message:
+                                        type: string
+                                        example: 'Bad request'
+                '500':
+                    description: Server error
+                    content:
+                        application/json:
+                            schema:
+                                type: object
+                                properties:
+                                    status:
+                                        type: integer
+                                        example: 500
+                                    isSuccess:
+                                        type: boolean
+                                        example: false
+                                    code:
+                                        type: integer
+                                        example: COMMON000
+                                    message:
+                                        type: string
+                                        example: 'Server error, please contact the administrator'
