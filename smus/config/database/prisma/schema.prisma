@@ -1,0 +1,202 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model AuthenticatedUserForBoard {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  boardId   Int
+  createdAt DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt DateTime? @db.Timestamp(3)
+  deletedAt DateTime? @db.Timestamp(3)
+}
+
+model Board {
+  id             Int       @id @default(autoincrement())
+  boardName      String    @db.VarChar(40)
+  isCanAnonymous Boolean   @db.TinyInt
+  majorId        Int
+  createdAt      DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt      DateTime? @db.Timestamp(3)
+  deletedAt      DateTime? @db.Timestamp(3)
+}
+
+model BoardMapBoardType {
+  id          Int       @id @default(autoincrement())
+  boardId     Int
+  boardTypeId Int
+  createdAt   DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt   DateTime? @db.Timestamp(3)
+  deletedAt   DateTime? @db.Timestamp(3)
+}
+
+model BoardType {
+  id        Int       @id @default(autoincrement())
+  type      String    @db.VarChar(30)
+  createdAt DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt DateTime? @db.Timestamp(3)
+  deletedAt DateTime? @db.Timestamp(3)
+}
+
+model Comment {
+  id          Int       @id @default(autoincrement())
+  postId      Int
+  userId      Int
+  content     String    @db.Text
+  isAnonymous Boolean   @db.TinyInt
+  parentId    Int?
+  like        Int       @default(0)
+  dislike     Int       @default(0)
+  report      Int       @default(0)
+  createdAt   DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt   DateTime? @db.Timestamp(3)
+  deletedAt   DateTime? @db.Timestamp(3)
+}
+
+model Major {
+  id        Int       @id @default(autoincrement())
+  majorName String?   @db.VarChar(50)
+  createdAt DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt DateTime? @db.Timestamp(3)
+  deletedAt DateTime? @db.Timestamp(3)
+}
+
+model MajorAuthRejectReport {
+  id         Int       @id @default(autoincrement())
+  rejectText String?   @db.TinyText
+  userId     Int
+  createdAt  DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt  DateTime? @db.Timestamp(3)
+  deletedAt  DateTime? @db.Timestamp(3)
+}
+
+model MajorAuthReport {
+  id          Int       @id @default(autoincrement())
+  imgUrl      String    @db.VarChar(2084)
+  description String?   @db.VarChar(256)
+  userId      Int
+  createdAt   DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt   DateTime? @db.Timestamp(3)
+  deletedAt   DateTime? @db.Timestamp(3)
+}
+
+model Post {
+  id          Int       @id @default(autoincrement())
+  boardId     Int
+  userId      Int
+  title       String    @db.VarChar(100)
+  content     String    @db.MediumText
+  hit         Int       @default(0)
+  like        Int       @default(0)
+  dislike     Int       @default(0)
+  scrap       Int       @default(0)
+  report      Int       @default(0)
+  isAnonymous Boolean   @db.TinyInt
+  createdAt   DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt   DateTime? @db.Timestamp(3)
+  deletedAt   DateTime? @db.Timestamp(3)
+}
+
+model PostImage {
+  id        Int       @id @default(autoincrement())
+  postId    Int
+  imgUrl    String    @db.VarChar(2084)
+  createdAt DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt DateTime? @db.Timestamp(3)
+  deletedAt DateTime? @db.Timestamp(3)
+}
+
+model User {
+  id              Int       @id @default(autoincrement())
+  schoolId        String    @db.VarChar(15)
+  email           String    @db.VarChar(100)
+  password        String    @db.VarChar(100)
+  roleId          Int
+  nickname        String?   @db.VarChar(30)
+  profileImgUrl   String?   @db.VarChar(2084)
+  isAuthenticated Boolean?  @db.TinyInt
+  createdAt       DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt       DateTime? @db.Timestamp(3)
+  deletedAt       DateTime? @db.Timestamp(3)
+}
+
+model UserLikeComment {
+  id        Int       @id @default(autoincrement())
+  commentId Int
+  userId    Int
+  isLike    Boolean?  @db.TinyInt
+  createdAt DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt DateTime? @db.Timestamp(3)
+  deletedAt DateTime? @db.Timestamp(3)
+}
+
+model UserLikePost {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  postId    Int
+  isLike    Boolean?  @db.TinyInt
+  createdAt DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt DateTime? @db.Timestamp(3)
+  deletedAt DateTime? @db.Timestamp(3)
+}
+
+model UserMajor {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  majorId   Int
+  createdAt DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt DateTime? @db.Timestamp(3)
+  deletedAt DateTime? @db.Timestamp(3)
+}
+
+model UserMbti {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  mbti      String    @db.VarChar(4)
+  createdAt DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt DateTime? @db.Timestamp(3)
+  deletedAt DateTime? @db.Timestamp(3)
+}
+
+model UserReportComment {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  commentId Int
+  content   String?   @db.Text
+  createdAt DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt DateTime? @db.Timestamp(3)
+  deletedAt DateTime? @db.Timestamp(3)
+}
+
+model UserReportPost {
+  id        Int       @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  content   String?   @db.Text
+  createdAt DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt DateTime? @db.Timestamp(3)
+  deletedAt DateTime? @db.Timestamp(3)
+}
+
+model UserRole {
+  id        Int       @id @default(autoincrement())
+  role      String    @db.VarChar(100)
+  createdAt DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt DateTime? @db.Timestamp(3)
+  deletedAt DateTime? @db.Timestamp(3)
+}
+
+model UserScrapPost {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  postId    Int
+  createdAt DateTime  @default(now()) @db.Timestamp(3)
+  updatedAt DateTime? @db.Timestamp(3)
+  deletedAt DateTime? @db.Timestamp(3)
+}
